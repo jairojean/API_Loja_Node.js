@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Produtos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Loja de Produtos</h2>
+        <div class="row mb-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="form-section bg-light p-4 rounded">
+                    <h4>Cadastrar Novo Produto</h4>
+                    <input type="text" class="form-control mb-2" id="id" placeholder="Código do Produto (ID)">
+                    <input type="text" class="form-control mb-2" id="name" placeholder="Nome do Produto">
+                    <button class="btn btn-success" onclick="createProduct()">Criar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="form-section bg-light p-4 rounded">
+                    <h4>Editar Produto</h4>
+                    <input type="text" class="form-control mb-2" id="idEdit" placeholder="ID" readonly>
+                    <input type="text" class="form-control mb-2" id="nameEdit" placeholder="Nome">
+                    <button class="btn btn-warning" onclick="updateProduct()">Editar</button>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="text-center">Lista de Produtos</h4>
+        <ul id="products" class="list-group"></ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function createProduct() {
+            var idInput = document.getElementById("id");
+            var nameInput = document.getElementById("name");
+
+            var product = {
+                id: parseInt(idInput.value),  // Converte o ID para um número inteiro
+                name: nameInput.value
+            };
+
+            axios.post("http://localhost:4567/routes/products", product).then(response => {
+                if (response.status == 200) {
+                    alert("Produto cadastrado!");
+                    loadProducts();
+                    idInput.value = ""; // Limpa o campo ID
+                    nameInput.value = ""; // Limpa o campo Nome
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
+        function deleteProduct(listItem) {
+            var id = listItem.getAttribute("data-id");
+            axios.delete("http://localhost:4567/routes/products/" + id).then(response => {
+                alert("Produto deletado!");
+                loadProducts();
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
+        function loadForm(listItem) {
+            var id = listItem.getAttribute("data-id");
+            var name = listItem.getAttribute("data-name");
+            document.getElementById("idEdit").value = id;
+            document.getElementById("nameEdit").value = name;
+        }
+
+        function updateProduct() {
+            var idInput = document.getElementById("idEdit");
+            var nameInput = document.getElementById("nameEdit");
+
+            var product = {
+                name: nameInput.value
+            };
+
+            var id = idInput.value;
+
+            axios.put("http://localhost:4567/routes/products/" + id, product).then(response => {
+                if (response.status == 200) {
+                    alert("Produto atualizado!");
+                    loadProducts();
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
+        function loadProducts() {
+            axios.get("http://localhost:4567/routes/products").then(response => {
+                var products = response.data;
+                var list = document.getElementById("products");
+                list.innerHTML = "";
+
+                products.products.forEach(product => {
+                    var item = document.createElement("li");
+                    item.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                    item.setAttribute("data-id", product.id);
+                    item.setAttribute("data-name", product.name);
+                    item.innerHTML = product.id + " - " + product.name;
+
+                    var buttonGroup = document.createElement("div");
+                    buttonGroup.className = "btn-group btn-group-sm";
+
+                    var deleteBtn = document.createElement("button");
+                    deleteBtn.className = "btn btn-danger";
+                    deleteBtn.innerHTML = "Deletar";
+                    deleteBtn.addEventListener("click", function() {
+                        deleteProduct(item);
+                    });
+
+                    var editBtn = document.createElement("button");
+                    editBtn.className = "btn btn-info";
+                    editBtn.innerHTML = "Editar";
+                    editBtn.addEventListener("click", function() {
+                        loadForm(item);
+                    });
+
+                    buttonGroup.appendChild(deleteBtn);
+                    buttonGroup.appendChild(editBtn);
+                    item.appendChild(buttonGroup);
+                    list.appendChild(item);
+                });
+
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+
+        window.onload = loadProducts;
+
+    </script>
+</body>
+</html>
