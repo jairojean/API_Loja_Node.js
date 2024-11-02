@@ -22,10 +22,8 @@ router.get("/:id", (req, res) => {
     }
 });
 
-
 router.post("/create/", (req, res) => {
     const { id, name } = req.body; 
-
     if (isNaN(id)) {
         return res.sendStatus(400);
     } else {
@@ -41,7 +39,6 @@ router.delete("/delete/:id", (req, res) => {
     } else {
         const id = parseInt(req.params.id);
         const index = products.products.findIndex(p => p.id === id);
-
         if (index === -1) {
             return res.sendStatus(404);
         } else {

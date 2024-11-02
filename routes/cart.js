@@ -8,6 +8,7 @@ router.get("/ListItemsCart", (req, res) => {
     itemsCart = connect.loadFromJsonFile("ItemsCart");
     res.status(200).json(itemsCart);
 });
+
 router.get("/orderlist", (req, res) => {
     itemsCart = connect.loadFromJsonFile("order-list");
     res.status(200).json(itemsCart);
@@ -54,16 +55,13 @@ router.delete("/deleteItem/:id", (req, res) => {
         return res.sendStatus(400);
     } else {
         const id = parseInt(req.params.id);
-        const index = itemsCart.findIndex(item => item.id === id); 
-
+        const index = itemsCart.findIndex(item => item.id === id);
         if (index === -1) {
-            return res.sendStatus(404); 
+            return res.sendStatus(404);
         } else {
-            
-            itemsCart.splice(index, 1); 
-            
+            itemsCart.splice(index, 1);
             connect.safeInJsonFile(itemsCart, 'ItemsCart');
-            return res.sendStatus(200); 
+            return res.sendStatus(200);
         }
     }
 });
@@ -72,13 +70,9 @@ router.post("/finishBuy", (req, res) => {
     const buy = req.body;
     try {
         data = connect.loadFromJsonFile("order-list");
-        
-       
         data.vendas.push(buy);
         connect.safeInJsonFile(data, "order-list");
-
         connect.safeInJsonFile([], "ItemsCart");
-
         return res.status(200).json({ message: "Compra finalizada com sucesso!" });
     } catch (error) {
         console.error("Erro ao salvar a compra:", error);
