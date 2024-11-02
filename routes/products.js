@@ -4,12 +4,10 @@ const router = express.Router();
 
 let products = connect.loadFromJsonFile('products'); // carregando do json banco de dados falso
 
-// Rota para obter todos os produtos
-router.get("/", (req, res) => {
+router.get("/list/", (req, res) => {
     res.status(200).json(products);
 });
 
-// Rota para obter um produto específico
 router.get("/:id", (req, res) => {
     if (isNaN(req.params.id)) {
         return res.sendStatus(400);
@@ -24,9 +22,9 @@ router.get("/:id", (req, res) => {
     }
 });
 
-// Rota para criar um novo produto
-router.post("/", (req, res) => {
-    const { id, name } = req.body; // Adicione 'id' aqui
+
+router.post("/create/", (req, res) => {
+    const { id, name } = req.body; 
 
     if (isNaN(id)) {
         return res.sendStatus(400);
@@ -37,8 +35,7 @@ router.post("/", (req, res) => {
     }
 });
 
-// Rota para deletar um produto
-router.delete("/:id", (req, res) => {
+router.delete("/delete/:id", (req, res) => {
     if (isNaN(req.params.id)) {
         return res.sendStatus(400);
     } else {
@@ -55,8 +52,7 @@ router.delete("/:id", (req, res) => {
     }
 });
 
-// Rota para atualizar um produto
-router.put("/:id", (req, res) => {
+router.put("/update/:id", (req, res) => {
     if (isNaN(req.params.id)) {
         return res.sendStatus(400);
     } else {

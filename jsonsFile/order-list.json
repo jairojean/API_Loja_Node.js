@@ -1,0 +1,46 @@
+{
+    "vendas": [
+        {
+            "produtos": [
+                {
+                    "name": "Sushi tv 10 polegadas",
+                    "quantity": 1
+                },
+                {
+                    "name": "Açaí na Tigela",
+                    "quantity": 1
+                },
+                {
+                    "name": "Bolo de Chocolate",
+                    "quantity": 1
+                }
+            ],
+            "paymentMethod": "cartao_debito",
+            "deliveryAddress": "teste"
+        },
+        {
+            "produtos": [
+                {
+                    "name": "radio",
+                    "quantity": 1
+                }
+            ],
+            "paymentMethod": "cartao_credito",
+            "deliveryAddress": " ̣·´~ ̣,lç,lç"
+        },
+        {
+            "produtos": [
+                {
+                    "name": "Salada Caesar",
+                    "quantity": 4
+                },
+                {
+                    "name": "novo",
+                    "quantity": 22
+                }
+            ],
+            "paymentMethod": "pix",
+            "deliveryAddress": "ghyjuyhgujgyuyg"
+        }
+    ]
+}

@@ -8,6 +8,10 @@ router.get("/ListItemsCart", (req, res) => {
     itemsCart = connect.loadFromJsonFile("ItemsCart");
     res.status(200).json(itemsCart);
 });
+router.get("/orderlist", (req, res) => {
+    itemsCart = connect.loadFromJsonFile("order-list");
+    res.status(200).json(itemsCart);
+});
 
 router.post("/addItemsCart", (req, res) => {
     const { id, name, quantity } = req.body;
@@ -27,7 +31,6 @@ router.post("/addItemsCart", (req, res) => {
 });
 
 router.put("/updateItem/:id", (req, res) => {
-    console.log(req.params.id)
     if (isNaN(req.params.id)) {
         return res.sendStatus(400);
     } else {
@@ -51,21 +54,36 @@ router.delete("/deleteItem/:id", (req, res) => {
         return res.sendStatus(400);
     } else {
         const id = parseInt(req.params.id);
-        const index = itemsCart.findIndex(item => item.id === id); // Usar findIndex
+        const index = itemsCart.findIndex(item => item.id === id); 
 
         if (index === -1) {
-            return res.sendStatus(404); // Item não encontrado
+            return res.sendStatus(404); 
         } else {
-            console.log(itemsCart);
-            itemsCart.splice(index, 1); // Deletar o item pelo índice
-            console.log(itemsCart);
+            
+            itemsCart.splice(index, 1); 
+            
             connect.safeInJsonFile(itemsCart, 'ItemsCart');
-            return res.sendStatus(200); // Deletado com sucesso
+            return res.sendStatus(200); 
         }
     }
 });
 
+router.post("/finishBuy", (req, res) => {
+    const buy = req.body;
+    try {
+        data = connect.loadFromJsonFile("order-list");
+        
+       
+        data.vendas.push(buy);
+        connect.safeInJsonFile(data, "order-list");
 
+        connect.safeInJsonFile([], "ItemsCart");
 
+        return res.status(200).json({ message: "Compra finalizada com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao salvar a compra:", error);
+        return res.status(500).json({ message: "Erro ao finalizar a compra." });
+    }
+});
 
 module.exports = router;
