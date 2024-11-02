@@ -21,9 +21,4 @@ Este é um sistema desenvolvido para o gerenciamento de produtos, cadastro de us
 - Várias formas de pagamento (futuro recurso).
 - Interface responsiva para uma melhor experiência do usuário.
 
-## Instalação
 
-1. **Clone o repositório:**
-
-   ```bash
-  

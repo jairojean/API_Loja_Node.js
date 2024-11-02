@@ -41,10 +41,13 @@
         function createProduct() {
             var idInput = document.getElementById("id");
             var nameInput = document.getElementById("name");
-
+            if (idInput.value === "" || idInput.value === null) {
+                alert("ID nulo! Por favor, preencha com um valor válido.");
+            }else{
             var product = {
                 id: parseInt(idInput.value),  // Converte o ID para um número inteiro
                 name: nameInput.value
+            }
             };
 
             axios.post("http://localhost:4567/routes/products", product).then(response => {

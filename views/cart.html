@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Produtos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Loja de Produtos</h2>
+
+        <h4 class="text-center">Carrinho</h4>
+        <ul id="carrinho" class="list-group mb-4"></ul>
+
+        <h4 class="text-center">Lista de Produtos</h4>
+        <ul id="products" class="list-group"></ul>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="finalizarCompra()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let carrinho = []
+
+        function loadProducts() {
+            axios.get("http://localhost:4567/routes/products").then(response => {
+                var products = response.data;
+                var list = document.getElementById("products");
+                list.innerHTML = "";
+                atualizarCarrinho();
+
+                products.products.forEach(product => {
+                    var item = document.createElement("li");
+                    item.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                    item.setAttribute("data-id", product.id);
+                    item.setAttribute("data-name", product.name);
+                    item.innerHTML = product.id + " - " + product.name;
+
+                    var buttonGroup = document.createElement("div");
+                    buttonGroup.className = "btn-group btn-group-sm";
+
+                    var addBtn = document.createElement("button");
+                    addBtn.className = "btn btn-success";
+                    addBtn.innerHTML = "Adicionar ao Carrinho";
+                    addBtn.addEventListener("click", function() {
+                        adicionarAoCarrinho(product);
+                    });
+
+                    buttonGroup.appendChild(addBtn);
+                    item.appendChild(buttonGroup);
+                    list.appendChild(item);
+                });
+
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+
+        function adicionarAoCarrinho(product) {
+            const quantidade = prompt("Informe a quantidade para adicionar ao carrinho:", 1);
+            if (!quantidade || isNaN(quantidade) || quantidade <= 0) {
+                alert("Quantidade inválida!");
+                return;
+            }
+            
+            axios.post("http://localhost:4567/routes/cart/addItemsCart", {
+                id: product.id,
+                name: product.name,
+                quantity: parseInt(quantidade) // Adiciona a quantidade
+            }).then(response => {
+                alert(product.name + " adicionado ao carrinho! (Quantidade: " + quantidade + ")");
+                atualizarCarrinho(); // Atualiza o carrinho após adicionar
+            }).catch(error => {
+                alert(product.name + " já cadastrado!");
+                console.error("Erro ao adicionar produto ao carrinho:", error);
+            });
+        }
+
+        function atualizarCarrinho() {
+            axios.get("http://localhost:4567/routes/cart/ListItemsCart").then(response => {
+                carrinho = response.data; 
+                var carrinhoList = document.getElementById("carrinho");
+                carrinhoList.innerHTML = ""; // Limpa a lista do carrinho
+
+                carrinho.forEach(item => {
+                    var li = document.createElement("li");
+                    li.className = "list-group-item d-flex justify-content-between align-items-center";
+                    li.innerHTML = `${item.id} - ${item.name} 
+                        <input type="number" value="${item.quantity}" min="1" class="form-control quantity-input" 
+                        onchange="atualizarQuantidade(${item.id}, this.value)" style="width: 80px; margin-left: 10px;">`;
+
+                    var buttonGroup = document.createElement("div");
+                    buttonGroup.className = "btn-group btn-group-sm";
+
+                    var removeBtn = document.createElement("button");
+                    removeBtn.className = "btn btn-danger";
+                    removeBtn.innerHTML = "Remover";
+                    removeBtn.addEventListener("click", function() {
+                        removerDoCarrinho(item.id);
+                    });
+
+                    buttonGroup.appendChild(removeBtn);
+                    li.appendChild(buttonGroup);
+                    carrinhoList.appendChild(li);
+                });
+            }).catch(error => {
+                console.error("Erro ao carregar o carrinho:", error);
+            });
+        }
+
+        function atualizarQuantidade(id, novaQuantidade) {
+            if (isNaN(novaQuantidade) || novaQuantidade <= 0) {
+                alert("Quantidade inválida!");
+                return;
+            }
+ 
+            // Atualiza a quantidade no backend
+            axios.put(`http://localhost:4567/routes/cart/updateItem/${id}`, { quantity: parseInt(novaQuantidade) })
+                .then(response => {
+                    alert("Quantidade atualizada para o produto " + id);
+                    atualizarCarrinho(); // Atualiza o carrinho após a alteração
+                })
+                .catch(error => {
+                    console.error("Erro ao atualizar quantidade:", error);
+                });
+        }
+
+        function removerDoCarrinho(id) {
+            axios.delete(`http://localhost:4567/routes/cart/deleteItem/${id}`).then(response => {
+                alert("Produto removido do carrinho!");
+                atualizarCarrinho();
+            }).catch(error => {
+                console.error("Erro ao remover produto do carrinho:", error);
+            });
+        }
+
+        function finalizarCompra() {
+            if (carrinho.length === 0) {
+                alert("O carrinho está vazio! Adicione produtos antes de finalizar a compra.");
+                return;
+            }
+
+            let listaProdutos = carrinho.map(p => `${p.name} (Quantidade: ${p.quantity})`).join(", ");
+            alert("Compra finalizada com sucesso! Produtos: " + listaProdutos);
+            carrinho = []; // Limpa o carrinho após a compra
+            atualizarCarrinho(); // Atualiza a lista do carrinho
+        }
+
+        window.onload = loadProducts;
+
+    </script>
+</body>
+</html>
