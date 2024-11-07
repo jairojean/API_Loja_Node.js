@@ -41,6 +41,54 @@
             ],
             "paymentMethod": "pix",
             "deliveryAddress": "ghyjuyhgujgyuyg"
+        },
+        {
+            "produtos": [
+                {
+                    "name": "Lasanha Bolonhesa",
+                    "quantity": 1
+                },
+                {
+                    "name": "Salada 89089089089",
+                    "quantity": 1
+                }
+            ],
+            "paymentMethod": "cartao_debito",
+            "deliveryAddress": "iuouiouioui"
+        },
+        {
+            "produtos": [
+                {
+                    "name": "Lasanha Bolonhesa",
+                    "quantity": 1
+                },
+                {
+                    "name": "Bolo de Chocolate",
+                    "quantity": 1
+                }
+            ],
+            "paymentMethod": "alimentacao",
+            "deliveryAddress": "kç~klç~kl~"
+        },
+        {
+            "produtos": [
+                {
+                    "name": "Açaí na Tigela",
+                    "quantity": 1
+                }
+            ],
+            "paymentMethod": "cartao_debito",
+            "deliveryAddress": "hjlkjhl"
+        },
+        {
+            "produtos": [
+                {
+                    "name": "Lasanha Bolonhesa",
+                    "quantity": 1
+                }
+            ],
+            "paymentMethod": "cartao_credito",
+            "deliveryAddress": "ssdsds"
         }
     ]
 }

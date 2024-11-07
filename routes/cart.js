@@ -1,16 +1,19 @@
 const express = require("express");
 const connect = require("../Connect_db");
 const router = express.Router();
+const userAuth = require("../middlewares/userAuth")
+
 
 let itemsCart = [];
 
-router.get("/ListItemsCart", (req, res) => {
+router.get("/ListItemsCart",(req, res) => {
     itemsCart = connect.loadFromJsonFile("ItemsCart");
     res.status(200).json(itemsCart);
 });
 
-router.get("/orderlist", (req, res) => {
+router.get("/orderlist", (req, res) => {   // testando sessão
     itemsCart = connect.loadFromJsonFile("order-list");
+    console.log(itemsCart);
     res.status(200).json(itemsCart);
 });
 
@@ -68,6 +71,7 @@ router.delete("/deleteItem/:id", (req, res) => {
 
 router.post("/finishBuy", (req, res) => {
     const buy = req.body;
+    console.log("Chegou aqui no finishBuy");
     try {
         data = connect.loadFromJsonFile("order-list");
         data.vendas.push(buy);

@@ -11,14 +11,19 @@ Este é um sistema desenvolvido para o gerenciamento de produtos, cadastro de us
 - **Axios**: Biblioteca para realizar requisições HTTP, utilizada para consumir a API.
 - **HTML/CSS**: Estrutura e estilo da interface do usuário.
 - **JavaScript**: Linguagem de programação para a lógica do cliente.
+- **Sessions**: Armazenam dados do usuário entre requisições, permitindo manter informações como autenticação e preferências.
+
 
 ## Funcionalidades
 
 - Cadastro de produtos com nome e ID.
-- Cadastro de usuários (futuro recurso).
+- Cadastro de usuários .
 - Listagem de produtos disponíveis.
 - Realização de compras de um ou mais itens.
-- Várias formas de pagamento (futuro recurso).
+- Várias formas de pagamento.
 - Interface responsiva para uma melhor experiência do usuário.
+
+
+
 
 

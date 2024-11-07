@@ -28,6 +28,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="order-list.html">Compras Realizadas</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="logout()">Logout</a>
+                </li>
+                
             </ul>
         </div>
     </nav>
@@ -184,12 +188,12 @@
                 return;
             }
             const produtosParaEnviar = carrinho.map(p => ({
-            name: p.name,
-            quantity: p.quantity
+                name: p.name,
+                quantity: p.quantity
             }));
             // Chama a função para finalizar a compra
             finishbuy(produtosParaEnviar, paymentMethod, deliveryAddress);
-             // Limpa o carrinho após a compra
+            // Limpa o carrinho após a compra
             atualizarCarrinho(); // Atualiza a lista do carrinho
         }
 
@@ -200,12 +204,30 @@
                 deliveryAddress
             }).then(response => {
                 alert("Compra realizada com sucesso!");
-                atualizarCarrinho(); 
+                atualizarCarrinho();
+
             }).catch(error => {
                 alert("Erro ao finalizar compra!");
                 console.error("Erro ao finalizar compra:", error);
             });
-        }  
+        }
+
+        function logout() {
+            axios.get("http://localhost:4567/app/login/logout/")
+                .then(response => {
+                    // Verifique se o logout foi bem-sucedido
+                    if (response.status === 200) {
+                        // Redirecionar para a página de login
+                        window.location.href = 'index.html';
+                    } else {
+                        console.log("Erro ao deslogar:", response.data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro na requisição de logout:", error);
+                });
+        }
+
         window.onload = loadProducts;
     </script>
 </body>

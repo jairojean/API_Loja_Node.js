@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Online - Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Mercado Online</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html">Listar produtos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">Realizar compras</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="order-list.html">Compras Realizadas</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div class="container mt-5">
+        <h2 class="text-center">Mercado Online - Login</h2>
+        <div class="row mb-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="form-section bg-light p-4 rounded">
+                    <h4>Faça login</h4>
+                    <input type="email" class="form-control mb-2" id="email" placeholder="Email">
+                    <input type="password" class="form-control mb-2" id="password" placeholder="Senha">
+                    <button class="btn btn-primary" onclick="login()">Entrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function login() {
+            const emailInput = document.getElementById("email");
+            const passwordInput = document.getElementById("password");
+
+            // Validação simples
+            if (!emailInput.value || !passwordInput.value) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            const credentials = {
+                email: emailInput.value,
+                password: passwordInput.value
+            };
+
+            axios.post("http://localhost:4567/app/login/authenticate", credentials)
+                .then(response => {
+                    if (response.status === 200) {
+                        alert("Login realizado com sucesso!");
+                        window.location.href = "cart.html";
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("Erro ao realizar login. Verifique as credenciais.");
+                });
+        }
+    </script>
+</body>
+</html>
